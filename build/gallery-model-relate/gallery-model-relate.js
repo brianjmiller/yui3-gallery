@@ -1,4 +1,4 @@
-YUI.add('gallery-model-relate', function(Y) {
+YUI.add('gallery-model-relate', function (Y, NAME) {
 
 /**
 An extension for model and a set of classes that allow relationships to be
@@ -28,9 +28,19 @@ var ToManyRelationship = {
     @private
     **/
     _initRelated: function() {
-        var self = this;
+        var self = this,
+            listCtor = self.listType,
+            listCfg = {model: self.RelatedModel};
 
-        self.related = new self.listType({model: self.relatedModel});
+        if (Y.Lang.isString(self.listType)) {
+            listCtor = Y.namespace(self.listType);
+        }
+
+        if (self.shouldBubble) {
+            listCfg.bubbleTargets = [ self.model ];
+        }
+
+        self.related = new listCtor(listCfg);
 
         self._handles.push(self.related.on('remove', self._onRelatedRemove, self));
 
@@ -212,6 +222,9 @@ var ToOneRelationship = {
         m = models[0] || null;
 
         if (self.related) {
+            if (self.shouldBubble) {
+                self.related.removeTarget(self.model);
+            }
             this.fire('remove', {model: self.related});
         }
 
@@ -219,6 +232,9 @@ var ToOneRelationship = {
         self.related = m;
 
         if (self.related) {
+            if (self.shouldBubble) {
+                self.related.addTarget(self.model);
+            }
             this.fire('add', {model: self.related});
         }
     },
@@ -336,6 +352,7 @@ function ModelRelationshp(config) {
 	self.key = config.key || config.model.idAttribute || 'id';
 	self.relatedModel = store._getModelCtor(config.relatedModel);
 	self.relatedKey = config.relatedKey || self.key;
+    self.shouldBubble = config.shouldBubble || false;
 
     if (config.type === 'toMany') {
         self.listType = config.listType || Y.ModelList;
@@ -834,6 +851,8 @@ ModelRelate.prototype = {
         the relationship
       @param {String|Function} [config.listType=ModelList] A custom modelList to use
         for the relationship (toMany relationships only)
+      @param {Boolean} [config.shouldBubble=false] If `true`, events from the related
+        models will bubble to this model
     **/
     addRelationship: function(name, config) {
         this._addRelationshipAttr(config, name);
@@ -1141,4 +1160,4 @@ ModelRelate.prototype = {
 Y.ModelRelate = ModelRelate;
 
 
-}, 'gallery-2012.04.18-20-14' ,{requires:['base', 'event-custom', 'array-extras', 'model-list', 'gallery-model-store']});
+}, '@VERSION@');

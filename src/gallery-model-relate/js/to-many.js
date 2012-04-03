@@ -26,9 +26,19 @@ var ToManyRelationship = {
     @private
     **/
     _initRelated: function() {
-        var self = this;
+        var self = this,
+            listCtor = self.listType,
+            listCfg = {model: self.RelatedModel};
 
-        self.related = new self.listType({model: self.relatedModel});
+        if (Y.Lang.isString(self.listType)) {
+            listCtor = Y.namespace(self.listType);
+        }
+
+        if (self.shouldBubble) {
+            listCfg.bubbleTargets = [ self.model ];
+        }
+
+        self.related = new listCtor(listCfg);
 
         self._handles.push(self.related.on('remove', self._onRelatedRemove, self));
 
