@@ -43,7 +43,7 @@ var ToOneRelationship = {
         m = models[0] || null;
 
         if (self.related) {
-            if (self.shouldBubble) {
+            if (self.manageTargets) {
                 self.related.removeTarget(self.model);
             }
             this.fire('remove', {model: self.related});
@@ -54,7 +54,7 @@ var ToOneRelationship = {
         self.related = m;
 
         if (self.related) {
-            if (self.shouldBubble) {
+            if (self.manageTargets) {
                 self.related.addTarget(self.model);
             }
             this.fire('add', {model: self.related});

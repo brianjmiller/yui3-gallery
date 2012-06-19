@@ -34,7 +34,7 @@ var ToManyRelationship = {
             listCtor = Y.namespace(self.listType);
         }
 
-        if (self.shouldBubble) {
+        if (self.manageTargets) {
             listCfg.bubbleTargets = [ self.model ];
         }
 

@@ -167,8 +167,9 @@ ModelRelate.prototype = {
         the relationship
       @param {String|Function} [config.listType=ModelList] A custom modelList to use
         for the relationship (toMany relationships only)
-      @param {Boolean} [config.shouldBubble=false] If `true`, events from the related
-        models will bubble to this model
+      @param {Boolean} [config.manageTargets=false] If `true`, events from the related
+        models will bubble to this model via setting the current object as a bubbleTarget
+        of the related model
     **/
     addRelationship: function(name, config) {
         this._addRelationshipAttr(config, name);

@@ -29,7 +29,7 @@ function ModelRelationshp(config) {
 	self.key = config.key || config.model.idAttribute || 'id';
 	self.relatedModel = store._getModelCtor(config.relatedModel);
 	self.relatedKey = config.relatedKey || self.key;
-    self.shouldBubble = config.shouldBubble || false;
+    self.manageTargets = config.manageTargets || false;
 
     if (config.type === 'toMany') {
         self.listType = config.listType || Y.ModelList;

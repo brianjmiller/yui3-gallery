@@ -36,7 +36,7 @@ var ToManyRelationship = {
             listCtor = Y.namespace(self.listType);
         }
 
-        if (self.shouldBubble) {
+        if (self.manageTargets) {
             listCfg.bubbleTargets = [ self.model ];
         }
 
@@ -226,7 +226,7 @@ var ToOneRelationship = {
         m = models[0] || null;
 
         if (self.related) {
-            if (self.shouldBubble) {
+            if (self.manageTargets) {
                 self.related.removeTarget(self.model);
             }
             this.fire('remove', {model: self.related});
@@ -237,7 +237,7 @@ var ToOneRelationship = {
         self.related = m;
 
         if (self.related) {
-            if (self.shouldBubble) {
+            if (self.manageTargets) {
                 self.related.addTarget(self.model);
             }
             this.fire('add', {model: self.related});
@@ -357,7 +357,7 @@ function ModelRelationshp(config) {
 	self.key = config.key || config.model.idAttribute || 'id';
 	self.relatedModel = store._getModelCtor(config.relatedModel);
 	self.relatedKey = config.relatedKey || self.key;
-    self.shouldBubble = config.shouldBubble || false;
+    self.manageTargets = config.manageTargets || false;
 
     if (config.type === 'toMany') {
         self.listType = config.listType || Y.ModelList;
@@ -862,8 +862,9 @@ ModelRelate.prototype = {
         the relationship
       @param {String|Function} [config.listType=ModelList] A custom modelList to use
         for the relationship (toMany relationships only)
-      @param {Boolean} [config.shouldBubble=false] If `true`, events from the related
-        models will bubble to this model
+      @param {Boolean} [config.manageTargets=false] If `true`, events from the related
+        models will bubble to this model via setting the current object as a bubbleTarget
+        of the related model
     **/
     addRelationship: function(name, config) {
         this._addRelationshipAttr(config, name);
