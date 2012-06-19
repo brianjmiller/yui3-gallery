@@ -25,7 +25,7 @@ ModelRelateAutoGen.prototype = {
                 if (relationships[key] && Y.Lang.isValue(config[key])) {
                     rel = relationships[key];
 
-                    if (rel.type === "toOne") {
+                    if (rel.type === "toOne" && Y.Lang.isValue(config[key][rel.relatedKey])) {
                         existingModel = Y.ModelStore.find(rel.relatedModel, config[key][rel.relatedKey]);
                         existingModel.setAttrs(config[key]);
                     }
